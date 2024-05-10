@@ -3,7 +3,7 @@ const ejs = require("ejs");
 const { encryptPrivateKey, decryptPrivateKey } = require("./helper");
 
 const app = express();
-const port = 3000;
+// const port = 3000;
 
 // Set EJS as the view engine
 app.set("view engine", "ejs");
