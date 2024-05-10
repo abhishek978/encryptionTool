@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js EJS Form</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 3% 10%;
+            padding: 0;
+        }
+
+        /* Form container */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        /* Form styles */
+        form {
+            width: 100%;
+        }
+
+        /* Input styles */
+        input[type="text"] {
+            padding: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Button styles */
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Documentation button styles */
+        .doc-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .doc-button:hover {
+            background-color: #0056b3;
+        }
+
+       
+/* Documentation section */
+#documentation {
+    display: none;
+    margin-top: 20px;
+    width: 100%;
+    max-height: 400px; /* Set a fixed height */
+}
+
+#documentation h2 {
+    color: #333;
+}
+
+#documentation p {
+    padding-bottom: 20px;
+}
+
+#documentation pre {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+}
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Encryption and Decryption Form</h1>
+        <form action="/encrypt" method="post">
+            <label for="encryptionKey">Encryption Key:</label>
+            <input type="text" id="encryptionKey" name="encryptionKey" required><br><br>
+            <label for="dataToEncrypt">Data to Encrypt:</label>
+            <input type="text" id="dataToEncrypt" name="dataToEncrypt" required><br><br>
+            <button type="submit">Encrypt</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h1>Decryption Form</h1>
+        <form action="/decrypt" method="post">
+            <label for="decryptionKey">Decryption Key:</label>
+            <input type="text" id="decryptionKey" name="decryptionKey" required><br><br>
+            <label for="dataToDecrypt">Data to Decrypt:</label>
+            <input type="text" id="dataToDecrypt" name="dataToDecrypt" required><br><br>
+            <button type="submit">Decrypt</button>
+        </form>
+    </div>
+
+    <!-- Button to toggle documentation -->
+    <button class="doc-button" onclick="toggleDocumentation()">Encryption and Decryption Documentation</button>
+
+    <!-- Documentation section -->
+    <div id="documentation">
+        <p>
+            This application provides a form for encrypting and decrypting data using AES encryption. Here it's using the crypto.js library for the process.
+            <br><br>
+            <strong>Encryption:</strong>
+            <br>
+            When encrypting data, the function 
+            <pre>// Encryption function
+                function encryptPrivateKey(privateKey, encryptionKey) {
+                  // Encrypt the private key using AES encryption with the provided encryption key
+                  const encrypted = CryptoJS.AES.encrypt(privateKey, encryptionKey).toString();
+                  // Return the encrypted private key
+                  return encrypted;
+                }</pre>
+            is used. It takes a private key and an encryption key as input, and returns the encrypted data.
+            <br><br>
+            <strong>Decryption:</strong>
+            <br>
+            For decryption, the function 
+            <pre>// Decryption function
+                function decryptPrivateKey(encryptedPrivateKey, encryptionKey) {
+                  // Decrypt the encrypted private key using AES decryption with the provided encryption key
+                  const decrypted = CryptoJS.AES.decrypt(
+                    encryptedPrivateKey,
+                    encryptionKey
+                  ).toString(CryptoJS.enc.Utf8);
+                  // Log the decrypted data
+                  console.log('decrypted', decrypted);
+                  
+                  // Check if decryption failed
+                  if (!decrypted) {
+                    // Throw an error if decryption fails due to an incorrect encryption key
+                    throw new Error('Decryption failed: Incorrect encryption key');
+                  }
+                  
+                  // Return the decrypted private key
+                  return decrypted;
+                }</pre>
+            is used. It takes the encrypted data and the encryption key as input, and returns the decrypted data if successful. If decryption fails due to an incorrect encryption key, it throws an error.
+        </p>
+    </div>
+    <div id="result">
+
+        <% if (encryptedPrivateKey) { %>
+            <h2>Encrypted Private Key:</h2>
+            <p><%= encryptedPrivateKey %></p>
+            <% } %>
+            <% if (decryptedPrivateKey) { %>
+                <h2>Decrypted Data:</h2>
+                <p><%= decryptedPrivateKey %></p>
+                <% } %>
+                <% if (encryptionKey) { %>
+                    <h2>Encryption Key:</h2>
+                    <p><%= encryptionKey %></p>
+                    <% } %>
+                    
+                    <% if (decryptionError) { %>
+                        <script>
+                            // Display decryption error in an alert box
+                            alert("<%= decryptionError %>");
+                        </script>
+                        <% } else { %>
+                            <!-- Ensure that decryptionError is defined -->
+                            <% decryptionError = null; %>
+                            <% } %>
+                        </div>
+
+    <script>
+        
+// Function to toggle documentation visibility
+function toggleDocumentation() {
+    let documentation = document.getElementById("documentation");
+    let response = document.getElementById("result");
+    if (documentation.style.display === "" || documentation.style.display === "none") {
+        documentation.style.display = "block";
+        response.style.display = "none";
+    } else {
+        documentation.style.display = "none";
+    }
+}
+
+// Check if the page is being refreshed
+if (performance.navigation.type === 1) {
+    // Redirect to the base route
+    window.location.href = "/";
+}
+
+    </script>
+</body>
+</html>
