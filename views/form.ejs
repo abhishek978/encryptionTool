@@ -135,11 +135,11 @@
             When encrypting data, the function 
             <pre>// Encryption function
                 function encryptPrivateKey(privateKey, encryptionKey) {
-                  // Encrypt the private key using AES encryption with the provided encryption key
                   const encrypted = CryptoJS.AES.encrypt(privateKey, encryptionKey).toString();
-                  // Return the encrypted private key
-                  return encrypted;
-                }</pre>
+                  const base64Encrypted = Buffer.from(encrypted).toString('base64');
+                  return base64Encrypted;
+                }
+                </pre>
             is used. It takes a private key and an encryption key as input, and returns the encrypted data.
             <br><br>
             <strong>Decryption:</strong>
@@ -147,21 +147,17 @@
             For decryption, the function 
             <pre>// Decryption function
                 function decryptPrivateKey(encryptedPrivateKey, encryptionKey) {
-                  // Decrypt the encrypted private key using AES decryption with the provided encryption key
+                  const encrypted = Buffer.from(encryptedPrivateKey, 'base64').toString();
                   const decrypted = CryptoJS.AES.decrypt(
-                    encryptedPrivateKey,
+                    encrypted,
                     encryptionKey
                   ).toString(CryptoJS.enc.Utf8);
-                  // Log the decrypted data
-                  console.log('decrypted', decrypted);
                   
                   // Check if decryption failed
                   if (!decrypted) {
-                    // Throw an error if decryption fails due to an incorrect encryption key
                     throw new Error('Decryption failed: Incorrect encryption key');
                   }
                   
-                  // Return the decrypted private key
                   return decrypted;
                 }</pre>
             is used. It takes the encrypted data and the encryption key as input, and returns the decrypted data if successful. If decryption fails due to an incorrect encryption key, it throws an error.

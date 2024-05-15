@@ -3,16 +3,17 @@ const CryptoJS = require("crypto-js");
 // Encryption function
 function encryptPrivateKey(privateKey, encryptionKey) {
   const encrypted = CryptoJS.AES.encrypt(privateKey, encryptionKey).toString();
-  return encrypted;
+  const base64Encrypted = Buffer.from(encrypted).toString('base64');
+  return base64Encrypted;
 }
 
 // Decryption function
 function decryptPrivateKey(encryptedPrivateKey, encryptionKey) {
+  const encrypted = Buffer.from(encryptedPrivateKey, 'base64').toString();
   const decrypted = CryptoJS.AES.decrypt(
-    encryptedPrivateKey,
+    encrypted,
     encryptionKey
   ).toString(CryptoJS.enc.Utf8);
-  console.log('decrypted', decrypted);
   
   // Check if decryption failed
   if (!decrypted) {
