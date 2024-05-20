@@ -47,16 +47,17 @@
         }
 
         /* Button styles */
-        button[type="submit"] {
+        button[type="submit"], .generate-password-button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
         }
 
-        button[type="submit"]:hover {
+        button[type="submit"]:hover, .generate-password-button:hover {
             background-color: #45a049;
         }
 
@@ -75,55 +76,82 @@
             background-color: #0056b3;
         }
 
-       
-/* Documentation section */
-#documentation {
-    display: none;
-    margin-top: 20px;
-    width: 100%;
-    max-height: 400px; /* Set a fixed height */
-}
+        /* Documentation section */
+        #documentation {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 800px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
 
-#documentation h2 {
-    color: #333;
-}
+        #documentation h2 {
+            color: #333;
+        }
 
-#documentation p {
-    padding-bottom: 20px;
-}
+        #documentation p {
+            padding-bottom: 20px;
+        }
 
-#documentation pre {
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 5px;
-}
+        #documentation pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Layout container */
+        .layout-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .left-container {
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>Encryption and Decryption Form</h1>
-        <form action="/encrypt" method="post">
-            <label for="encryptionKey">Encryption Key:</label>
-            <input type="text" id="encryptionKey" name="encryptionKey" required><br><br>
-            <label for="dataToEncrypt">Data to Encrypt:</label>
-            <input type="text" id="dataToEncrypt" name="dataToEncrypt" required><br><br>
-            <button type="submit">Encrypt</button>
-        </form>
-    </div>
+    <div class="layout-container">
+        <!-- Random Password Generator Section -->
+        <div class="form-container left-container">
+            <h1>Random Key Generator</h1>
+            <label for="generatedPassword">Generated Key:</label>
+            <input type="text" id="generatedPassword" readonly><br><br>
+            <button class="generate-password-button" onclick="generatePassword()">Generate Key</button>
+        </div>
 
-    <div class="form-container">
-        <h1>Decryption Form</h1>
-        <form action="/decrypt" method="post">
-            <label for="decryptionKey">Decryption Key:</label>
-            <input type="text" id="decryptionKey" name="decryptionKey" required><br><br>
-            <label for="dataToDecrypt">Data to Decrypt:</label>
-            <input type="text" id="dataToDecrypt" name="dataToDecrypt" required><br><br>
-            <button type="submit">Decrypt</button>
-        </form>
-    </div>
+        <div>
+            <div class="form-container">
+                <h1>Encryption and Decryption Form</h1>
+                <form action="/encrypt" method="post">
+                    <label for="encryptionKey">Encryption Key:</label>
+                    <input type="text" id="encryptionKey" name="encryptionKey" required><br><br>
+                    <label for="dataToEncrypt">Data to Encrypt:</label>
+                    <input type="text" id="dataToEncrypt" name="dataToEncrypt" required><br><br>
+                    <button type="submit">Encrypt</button>
+                </form>
+            </div>
 
-    <!-- Button to toggle documentation -->
-    <button class="doc-button" onclick="toggleDocumentation()">Encryption and Decryption Documentation</button>
+            <div class="form-container">
+                <h1>Decryption Form</h1>
+                <form action="/decrypt" method="post">
+                    <label for="decryptionKey">Decryption Key:</label>
+                    <input type="text" id="decryptionKey" name="decryptionKey" required><br><br>
+                    <label for="dataToDecrypt">Data to Decrypt:</label>
+                    <input type="text" id="dataToDecrypt" name="dataToDecrypt" required><br><br>
+                    <button type="submit">Decrypt</button>
+                </form>
+            </div>
+
+            <!-- Button to toggle documentation -->
+            <button class="doc-button" onclick="toggleDocumentation()">Encryption and Decryption Documentation</button>
+        </div>
+    </div>
 
     <!-- Documentation section -->
     <div id="documentation">
@@ -163,52 +191,58 @@
             is used. It takes the encrypted data and the encryption key as input, and returns the decrypted data if successful. If decryption fails due to an incorrect encryption key, it throws an error.
         </p>
     </div>
-    <div id="result">
 
+    <div id="result">
         <% if (encryptedPrivateKey) { %>
             <h2>Encrypted Private Key:</h2>
             <p><%= encryptedPrivateKey %></p>
-            <% } %>
-            <% if (decryptedPrivateKey) { %>
-                <h2>Decrypted Data:</h2>
-                <p><%= decryptedPrivateKey %></p>
-                <% } %>
-                <% if (encryptionKey) { %>
-                    <h2>Encryption Key:</h2>
-                    <p><%= encryptionKey %></p>
-                    <% } %>
-                    
-                    <% if (decryptionError) { %>
-                        <script>
-                            // Display decryption error in an alert box
-                            alert("<%= decryptionError %>");
-                        </script>
-                        <% } else { %>
-                            <!-- Ensure that decryptionError is defined -->
-                            <% decryptionError = null; %>
-                            <% } %>
-                        </div>
+        <% } %>
+        <% if (decryptedPrivateKey) { %>
+            <h2>Decrypted Data:</h2>
+            <p><%= decryptedPrivateKey %></p>
+        <% } %>
+        <% if (encryptionKey) { %>
+            <h2>Encryption Key:</h2>
+            <p><%= encryptionKey %></p>
+        <% } %>
+        <% if (decryptionError) { %>
+            <script>
+                // Display decryption error in an alert box
+                alert("<%= decryptionError %>");
+            </script>
+        <% } else { %>
+            <!-- Ensure that decryptionError is defined -->
+            <% decryptionError = null; %>
+        <% } %>
+    </div>
 
     <script>
-        
-// Function to toggle documentation visibility
-function toggleDocumentation() {
-    let documentation = document.getElementById("documentation");
-    let response = document.getElementById("result");
-    if (documentation.style.display === "" || documentation.style.display === "none") {
-        documentation.style.display = "block";
-        response.style.display = "none";
-    } else {
-        documentation.style.display = "none";
-    }
-}
+        // Function to toggle documentation visibility
+        function toggleDocumentation() {
+            let documentation = document.getElementById("documentation");
+            if (documentation.style.display === "" || documentation.style.display === "none") {
+                documentation.style.display = "block";
+            } else {
+                documentation.style.display = "none";
+            }
+        }
 
-// Check if the page is being refreshed
-if (performance.navigation.type === 1) {
-    // Redirect to the base route
-    window.location.href = "/";
-}
+        // Check if the page is being refreshed
+        if (performance.navigation.type === 1) {
+            // Redirect to the base route
+            window.location.href = "/";
+        }
 
+        // Function to generate a random password
+        function generatePassword() {
+            let length = 16,
+                charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@$%^&*",
+                password = "";
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            document.getElementById("generatedPassword").value = password;
+        }
     </script>
 </body>
 </html>
